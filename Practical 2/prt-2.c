@@ -1,4 +1,4 @@
-#include <stdio.h> int
+git#include <stdio.h> int
 main()
 {
 char str[50];
