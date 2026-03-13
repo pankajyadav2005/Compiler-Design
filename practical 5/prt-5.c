@@ -1,15 +1,13 @@
 #include<stdio.h>
-#include<string.h>
 
-char c[20];
+char c[10];
 int input = 0;
 
-void E();
-void EPRIME();
+void E(), EPRIME();
 
 int main()
 {
-    printf("Enter a String (use $ at end): ");
+    printf("Enter a String: ");
     scanf("%s", c);
 
     E();
@@ -29,10 +27,6 @@ void E()
         input++;
         EPRIME();
     }
-    else
-    {
-        printf("Invalid String\n");
-    }
 }
 
 void EPRIME()
@@ -45,13 +39,7 @@ void EPRIME()
             input++;
             EPRIME();
         }
-        else
-        {
-            printf("Invalid String\n");
-        }
     }
     else
-    {
-        return;   // ε production
-    }
+        return;
 }

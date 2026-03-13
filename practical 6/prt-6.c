@@ -1,60 +1,71 @@
+
 #include<stdio.h>
+#include<conio.h>
 #include<string.h>
-#include<stdlib.h>
 
 int main()
 {
-    char stack[50], ip[50], opt[10][10];
-    char ter[10];
-    int i, j, k, n, top = 0, row = 0, col = 0;
+    char stack[20], ip[20], opt[10][10][1], ter[10];
+    int i, j, k, n, top = 0, row, col;
     int len;
 
-    printf("Enter the number of terminals: ");
+    for(i = 0; i < 10; i++)
+    {
+        stack[i] = '\0';
+        ip[i] = '\0';
+        for(j = 0; j < 10; j++)
+        {
+            opt[i][j][0] = '\0';
+        }
+    }
+
+    printf("Enter the no.of terminals: ");
     scanf("%d", &n);
 
-    printf("Enter the terminals (without space): ");
+    printf("\nEnter the terminals: ");
     scanf("%s", ter);
 
-    printf("\nEnter the Operator Precedence Table values (<, >, =)\n");
-
+    printf("\nEnter the table values:\n");
     for(i = 0; i < n; i++)
     {
         for(j = 0; j < n; j++)
         {
-            printf("Enter value for %c %c: ", ter[i], ter[j]);
-            scanf(" %c", &opt[i][j]);
+            printf("Enter the value for %c %c: ", ter[i], ter[j]);
+            scanf("%s", opt[i][j]);
         }
     }
 
-    printf("\nOPERATOR PRECEDENCE TABLE:\n\t");
+    printf("\nOPERATOR PRECEDENCE TABLE:\n");
     for(i = 0; i < n; i++)
-        printf("%c\t", ter[i]);
+    {
+        printf("\t%c", ter[i]);
+    }
 
     printf("\n");
 
     for(i = 0; i < n; i++)
     {
-        printf("%c\t", ter[i]);
+        printf("\n%c |", ter[i]);
         for(j = 0; j < n; j++)
-            printf("%c\t", opt[i][j]);
-        printf("\n");
+        {
+            printf("\t%c", opt[i][j][0]);
+        }
     }
 
     stack[top] = '$';
-    stack[top+1] = '\0';
 
-    printf("\nEnter input string (append $ at end): ");
+    printf("\n\nEnter the input string (append with $): ");
     scanf("%s", ip);
 
     i = 0;
+
+    printf("\nSTACK\t\tINPUT STRING\t\tACTION\n");
+    printf("\n%s\t\t%s\t\t", stack, ip);
+
     len = strlen(ip);
 
-    printf("\nSTACK\t\tINPUT\t\tACTION\n");
-
-    while(i < len)
+    while(i <= len)
     {
-        printf("%s\t\t%s\t\t", stack, ip+i);
-
         for(k = 0; k < n; k++)
         {
             if(stack[top] == ter[k])
@@ -63,32 +74,41 @@ int main()
                 col = k;
         }
 
-        if(stack[top] == '$' && ip[i] == '$')
+        if((stack[top] == '$') && (ip[i] == '$'))
         {
-            printf("ACCEPTED\n");
+            printf("String is ACCEPTED");
             break;
         }
-        else if(opt[row][col] == '<' || opt[row][col] == '=')
+        else if((opt[row][col][0] == '<') || (opt[row][col][0] == '='))
         {
-            top++;
-            stack[top] = ip[i];
-            stack[top+1] = '\0';
-            printf("SHIFT %c\n", ip[i]);
+            stack[++top] = opt[row][col][0];
+            stack[++top] = ip[i];
+            ip[i] = ' ';
+            printf("Shift %c", stack[top]);
             i++;
-        }
-        else if(opt[row][col] == '>')
-        {
-            printf("REDUCE\n");
-            while(stack[top] != '<' && top > 0)
-                top--;
-            stack[top+1] = '\0';
         }
         else
         {
-            printf("REJECTED\n");
-            break;
+            if(opt[row][col][0] == '>')
+            {
+                while(stack[top] != '<')
+                {
+                    --top;
+                }
+                top = top - 1;
+                printf("Reduce");
+            }
+            else
+            {
+                printf("\nString is not accepted");
+                break;
+            }
         }
+
+        printf("\n");
+        printf("%s\t\t%s\t\t", stack, ip);
     }
 
-    return 0;
+    getch();
 }
+

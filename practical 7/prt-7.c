@@ -51,8 +51,6 @@ const struct gotol G[12]={
 {"emp","emp","k"},
 {"emp","emp","emp"},
 {"emp","emp","emp"},
-{"emp","emp","emp"},
-{"emp","emp","emp"}
 };
 
 char ter[6]={'i','+','*',')','(','$'};
@@ -70,12 +68,12 @@ struct grammar
 };
 
 const struct grammar rl[6]={
-{'E',"E+T"},
+{'E',"e+T"},
 {'E',"T"},
 {'T',"T*F"},
 {'T',"F"},
 {'F',"(E)"},
-{'F',"i"}
+{'F',"i"},
 };
 
 int main()
@@ -83,7 +81,7 @@ int main()
     char inp[80],x,p,dl[80],y,bl='a';
     int i=0,j,k,l,n,m,len;
 
-    printf("Enter the input: ");
+    printf("Enter the input : ");
     scanf("%s",inp);
 
     len=strlen(inp);
@@ -99,7 +97,6 @@ int main()
     {
         x=inp[i];
         p=stacktop(stack);
-
         isproduct(x,p);
 
         if(strcmp(temp,"emp")==0)
@@ -136,7 +133,8 @@ int main()
 
                 isreduce(y,dl[0]);
 
-                push(stack,&top,temp[0]);
+                for(m=0;temp[m]!='\0';m++)
+                    push(stack,&top,temp[m]);
             }
         }
 
@@ -154,13 +152,20 @@ int main()
 
 void push(char *s,int *sp,char item)
 {
-    *sp=*sp+1;
-    s[*sp]=item;
+    if(*sp==100)
+        printf("Stack is full");
+    else
+    {
+        *sp=*sp+1;
+        s[*sp]=item;
+    }
 }
 
 char stacktop(char *s)
 {
-    return s[top];
+    char i;
+    i=s[top];
+    return i;
 }
 
 void isproduct(char x,char p)
@@ -200,7 +205,7 @@ int isstate(char p)
 
 void error()
 {
-    printf("Error in input");
+    printf("Error in the input");
     exit(0);
 }
 
@@ -214,15 +219,20 @@ void isreduce(char x,char p)
 
 char pop(char *s,int *sp)
 {
-    char item=s[*sp];
-    *sp=*sp-1;
+    char item;
+    if(*sp==-1)
+        printf("Stack is empty");
+    else
+    {
+        item=s[*sp];
+        *sp=*sp-1;
+    }
     return item;
 }
 
 void printt(char *t,int *p,char inp[],int i)
 {
     int r;
-
     printf("\n");
 
     for(r=0;r<=*p;r++)
@@ -236,7 +246,8 @@ void printt(char *t,int *p,char inp[],int i)
 
 void rep(char t[],int r)
 {
-    char c=t[r];
+    char c;
+    c=t[r];
 
     switch(c)
     {
@@ -252,6 +263,6 @@ void rep(char t[],int r)
         case 'j': printf("9"); break;
         case 'k': printf("10"); break;
         case 'l': printf("11"); break;
-        default: printf("%c",t[r]);
+        default : printf("%c",t[r]); break;
     }
 }
